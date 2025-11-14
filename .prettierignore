@@ -1,3 +1,36 @@
+# Dependencies
+node_modules/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+coverage/
+
+# Logs
+*.log
+
+# Environment files
+.env*
+
+# Generated files
+/generated/
+*.generated.ts
+*.generated.js
+
+# Cache
+.cache/
+.parcel-cache
+.eslintcache
+.nyc_output
+
+# Temporary files
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db

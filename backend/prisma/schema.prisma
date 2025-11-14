@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enhanced User model with role-based access control
+model users {
+  id          Int       @id @default(autoincrement())
+  username     String    @unique
+  full_name   String?   @map("full_name")
+  role         String?   @map("role")
+  created_at   DateTime?  @default(now()) @map("created_at")
+  password     String?   @map("password")
+  hashed_password String?   @map("hashed_password")
+  
+  // Enhanced fields for ticket management
+  role_id      Int?      @map("role_id") @default(1)
+  is_active    Boolean    @default(true) @map("is_active")
+  last_login   DateTime?  @map("last_login")
+  phone         String?    @map("phone")
+  department    String?    @map("department")
+  avatar_url    String?    @map("avatar_url")
+  
+  @@map("users")
+  @@index([username])
+  @@index([role_id])
+}
+
+// Roles table for role-based access control
+model roles {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  permissions String[]  @default([])
+  description String?
+  is_active   Boolean   @default(true)
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt @map("updated_at")
+  
+  @@map("roles")
+}
+
+// Enhanced log_komplain table for ticket management
+model log_komplain {
+  id                    Int       @id @default(autoincrement())
+  tiket                 String?   @map("tiket")
+  tanggal                String?   @map("tanggal")
+  waktu                  String?   @map("waktu")
+  nama                   String?   @map("nama")
+  kendala                String?   @map("kendala")
+  status                 String?   @default("Open") @map("status")
+  action                 String?   @map("action")
+  note                   String?   @map("note")
+  pic                    String?   @map("pic")
+  last_updated            DateTime?  @map("last_updated")
+  onu_sn                 String?   @map("onu_sn")
+  
+  // Enhanced fields for ticket management
+  category_id            Int?       @map("category_id")
+  priority               Int         @default(3) @map("priority") // 1=High, 2=Medium, 3=Low
+  assigned_to            Int?       @map("assigned_to")
+  estimated_resolution_time Int?       @map("estimated_resolution_time")
+  actual_resolution_time   Int?       @map("actual_resolution_time")
+  resolution_summary     String?    @map("resolution_summary")
+  customer_impact       String?     @default("Medium") @map("customer_impact")
+  tags                  String[]    @default([]) @map("tags")
+  due_date              DateTime?   @map("due_date")
+  resolved_at            DateTime?   @map("resolved_at")
+  reopened_count        Int         @default(0) @map("reopened_count")
+  sla_breached          Boolean     @default(false) @map("sla_breached")
+  created_by            Int?       @map("created_by")
+  created_at            DateTime    @default(now()) @map("created_at")
+  updated_at            DateTime    @updatedAt @map("updated_at")
+  
+  @@map("log_komplain")
+  @@index([status])
+  @@index([category_id])
+  @@index([assigned_to])
+  @@index([created_at])
+  @@index([priority])
+  @@index([due_date])
+  @@index([status, assigned_to])
+  @@index([category_id, status])
+}
+
+// Ticket categories for categorization
+model ticket_categories {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  color       String   @default("#000000")
+  icon        String?
+  is_active   Boolean   @default(true)
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt @map("updated_at")
+  
+  @@map("ticket_categories")
+}
+
+// Ticket status history for audit trail
+model ticket_status_history {
+  id          Int      @id @default(autoincrement())
+  ticket_id   Int       @map("ticket_id")
+  old_status  String    @map("old_status")
+  new_status  String    @map("new_status")
+  changed_by  Int       @map("changed_by")
+  changed_at  DateTime   @default(now()) @map("changed_at")
+  notes       String?
+  
+  @@map("ticket_status_history")
+  @@index([ticket_id])
+  @@index([changed_at])
+}
+
+// Notifications table for real-time updates
+model notifications {
+  id          Int      @id @default(autoincrement())
+  user_id     Int       @map("user_id")
+  ticket_id   Int?       @map("ticket_id")
+  type        String    @map("type")
+  title       String    @map("title")
+  message     String    @map("message")
+  is_read     Boolean   @default(false) @map("is_read")
+  created_at   DateTime   @default(now()) @map("created_at")
+  
+  @@map("notifications")
+  @@index([user_id])
+  @@index([ticket_id])
+  @@index([is_read])
+}
+
+// Existing models from original system
+model data_fiber {
+  id          Int      @id @default(autoincrement())
+  nama_fiber  String    @map("nama_fiber")
+  created_at   DateTime   @default(now()) @map("created_at")
+  
+  @@map("data_fiber")
+}
+
+model snmp_devices {
+  id          Int      @id @default(autoincrement())
+  hostname    String    @map("hostname")
+  ip_address  String    @map("ip_address")
+  created_at   DateTime   @default(now()) @map("created_at")
+  
+  @@map("snmp_devices")
+}
+
+model snmp {
+  id          Int      @id @default(autoincrement())
+  device_id   Int       @map("device_id")
+  oid         String    @map("oid")
+  value       String    @map("value")
+  timestamp   DateTime   @default(now()) @map("timestamp")
+  
+  @@map("snmp")
+}
+
+// Foreign key relationships
+model log_komplain {
+  // Foreign key relationships
+  category      ticket_categories? @relation("category_tickets", fields: [category_id], references: [id])
+  assigned_user  users?            @relation("assigned_tickets", fields: [assigned_to], references: [id])
+  creator_user  users?            @relation("created_tickets", fields: [created_by], references: [id])
+}
+
+model users {
+  // Foreign key relationships
+  created_tickets  log_komplain[] @relation("created_tickets", fields: [created_by], references: [id])
+  assigned_tickets log_komplain[] @relation("assigned_tickets", fields: [assigned_to], references: [id])
+  role           roles?         @relation("user_roles", fields: [role_id], references: [id])
+}
+
+model roles {
+  // Foreign key relationships
+  users  users[] @relation("user_roles", fields: [role_id], references: [id])
+}
+
+model ticket_categories {
+  // Foreign key relationships
+  tickets log_komplain[] @relation("category_tickets", fields: [category_id], references: [id])
+}
+
+model ticket_status_history {
+  // Foreign key relationships
+  ticket log_komplain? @relation("ticket_history", fields: [ticket_id], references: [id])
+  changer users?       @relation("status_changer", fields: [changed_by], references: [id])
+}
+
+model notifications {
+  // Foreign key relationships
+  user   users? @relation("user_notifications", fields: [user_id], references: [id])
+  ticket log_komplain? @relation("ticket_notifications", fields: [ticket_id], references: [id])
+}
