@@ -1,0 +1,474 @@
+/* Cloud Storage Dashboard CSS */
+
+/* Variables for consistent theming */
+:root {
+  --primary-color: #4285f4;
+  --primary-hover: #3367d6;
+  --secondary-color: #f8f9fa;
+  --border-color: #e0e0e0;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --sidebar-width: 240px;
+  --rightbar-width: 280px;
+  --header-height: 64px;
+  --transition-speed: 0.2s;
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+  background-color: #fff;
+  line-height: 1.5;
+}
+
+/* Main layout */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  height: var(--header-height);
+  background-color: #fff;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--primary-color);
+  margin-right: 20px;
+}
+
+.search-bar {
+  flex-grow: 1;
+  max-width: 720px;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px 16px 8px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f1f3f4;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  margin-left: 12px;
+}
+
+/* Main content area */
+.main-content {
+  display: flex;
+  width: 100%;
+  margin-top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+}
+
+/* Left sidebar */
+.left-sidebar {
+  width: var(--sidebar-width);
+  background-color: #fff;
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.nav-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.nav-item.active {
+  background-color: #e8f0fe;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.nav-icon {
+  margin-right: 20px;
+  color: var(--text-secondary);
+}
+
+.nav-item.active .nav-icon {
+  color: var(--primary-color);
+}
+
+/* Center content */
+.center-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: '›';
+  margin: 0 8px;
+  color: var(--text-secondary);
+}
+
+.breadcrumb-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* File and folder container */
+.file-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.file-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-icon {
+  color: #fbbc04;
+}
+
+.file-name {
+  font-size: 14px;
+  text-align: center;
+  word-break: break-word;
+  width: 100%;
+}
+
+.file-info {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* List view alternative */
+.file-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.file-list th {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.file-list td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+.file-list tr:hover {
+  background-color: var(--secondary-color);
+}
+
+.file-list-checkbox {
+  width: 18px;
+  height: 18px;
+}
+
+/* Right sidebar */
+.right-sidebar {
+  width: var(--rightbar-width);
+  background-color: #fff;
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.sidebar-section {
+  margin-bottom: 24px;
+}
+
+.sidebar-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+.quick-access-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.quick-access-icon {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+}
+
+.quick-access-info {
+  flex-grow: 1;
+}
+
+.quick-access-name {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.quick-access-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.activity-item {
+  display: flex;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex-grow: 1;
+}
+
+.activity-text {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.activity-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #e8f0fe;
+}
+
+.btn-icon {
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .right-sidebar {
+    display: none;
+  }
+  
+  .left-sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-sidebar {
+    position: fixed;
+    left: -200px;
+    z-index: 200;
+    height: 100%;
+    transition: left var(--transition-speed);
+  }
+  
+  .left-sidebar.open {
+    left: 0;
+  }
+  
+  .center-content {
+    padding: 16px;
+  }
+  
+  .file-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* Context menu */
+.context-menu {
+  position: fixed;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  padding: 8px 0;
+  min-width: 200px;
+  display: none;
+}
+
+.context-menu-item {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.context-menu-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.context-menu-icon {
+  margin-right: 16px;
+  color: var(--text-secondary);
+}
+
+/* Loading spinner */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.p-1 { padding: 8px; }
+.p-2 { padding: 16px; }
